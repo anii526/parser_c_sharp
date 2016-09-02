@@ -1,4 +1,5 @@
-﻿using Program.vo;
+﻿using Newtonsoft.Json;
+using Program.vo;
 using System;
 using System.Collections.Generic;
 
@@ -21,21 +22,28 @@ namespace Program
             
             dbConnect = new DBConnect();
 
-            CityVO cityVO; 
-            for (int i = 0; i < parser.arrAllCitiesInfo.Length; i++)
+            CityVO cityVO;
+            //string json;
+            /*for (int i = 0; i < parser.arrAllCitiesInfo.Length; i++)
             {
                 cityVO = parser.arrAllCitiesInfo[i];
+                //json = JsonConvert.SerializeObject(cityVO.Weather);
+                //Console.WriteLine(json);
                 dbConnect.Insert(cityVO);
-            }
+                //WeatherVO[] weather = JsonConvert.DeserializeObject<WeatherVO[]>(json);
+                //Console.WriteLine(json);
+            }*/
 
             List<string>[] list;
             list = dbConnect.Select("SELECT * FROM cities");
 
             Console.WriteLine("list " + list[1][0]);
+            WeatherVO[] weather = JsonConvert.DeserializeObject<WeatherVO[]>(list[7][0]);
             Console.WriteLine("list " + list[0]);
             //dbConnect.Insert();
-
-            //Console.ReadKey();
+            //*/
+            Console.WriteLine("Запись окончена");
+            Console.ReadKey();
         }
     }
 }

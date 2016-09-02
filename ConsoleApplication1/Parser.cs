@@ -20,7 +20,7 @@ namespace Program
 
             //debug
             string response = "";
-            response = getRequest("https://www.gismeteo.ru/");
+            //response = getRequest("https://www.gismeteo.ru/");
 
 
             Console.WriteLine("Загрузка страницы закончилась");
@@ -28,9 +28,9 @@ namespace Program
 
             //debug
             //информация по брянску
-            //string[] idsCities = new string[] { "4258" };
+            string[] idsCities = new string[] { "4258" };
             //debug
-            string[] idsCities = getCitiesIDs(response);
+            //string[] idsCities = getCitiesIDs(response);
 
             response = string.Empty;
 
@@ -132,7 +132,7 @@ namespace Program
             for (int i = 0; i < 4; i++)
             {
                 weatherVO = new WeatherVO();
-                weatherVO.TimeOfDay = doc.QuerySelector("#tbwdaily2 > tr:nth-child(" + (i + 1) + ") > th:nth-child(1)").InnerHtml;
+                weatherVO.TimeOfDay = doc.QuerySelector("#tbwdaily2 > tr:nth-child(" + (i + 1) + ") > th:nth-child(1)").InnerHtml.ToString().Trim();
                 weatherVO.ImgSrcWeather = doc.QuerySelector("#tbwdaily2 > tr:nth-child(" + (i + 1) + ") > td:nth-child(2) > img:nth-child(1)").GetAttribute("src");
                 weatherVO.FeatureWeather = doc.QuerySelector("#tbwdaily2 > tr:nth-child(" + (i + 1) + ") > td:nth-child(3)").InnerHtml;
                 weatherVO.TemperatureAir = doc.QuerySelector("#tbwdaily2 > tr:nth-child(" + (i + 1) + ") > td:nth-child(4) > span:nth-child(1)").InnerHtml;

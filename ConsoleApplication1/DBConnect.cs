@@ -2,6 +2,7 @@
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
 using Program.vo;
+using Newtonsoft.Json;
 
 namespace Program
 {
@@ -78,7 +79,7 @@ namespace Program
         {
             //Console.WriteLine("INSERT INTO cities (IdCity, NameCity, ImgSrcWeather, Day, DayWeek, TemperatureMin, TemperatureMax  ) VALUES( " + cityVO.IndexCity + "," + cityVO.NameCity + "," + cityVO.ImgSrcWeather + "," + cityVO.Day + "," + cityVO.DayWeek + "," + cityVO.TemperatureMin + "," + cityVO.TemperatureMax + ")");
 
-            string query = "INSERT INTO cities (IdCity, NameCity, ImgSrcWeather, Day, DayWeek, TemperatureMin, TemperatureMax  ) VALUES( @IndexCity,@NameCity,@ImgSrcWeather,@Day,@DayWeek,@TemperatureMin,@TemperatureMax)";
+            string query = "INSERT INTO cities (IdCity, NameCity, ImgSrcWeather, Day, DayWeek, TemperatureMin, TemperatureMax, Weather  ) VALUES( @IndexCity,@NameCity,@ImgSrcWeather,@Day,@DayWeek,@TemperatureMin,@TemperatureMax,@Weather)";
 
             if (this.OpenConnection() == true)
             {
@@ -90,6 +91,7 @@ namespace Program
                 cmd.Parameters.AddWithValue("@DayWeek", cityVO.DayWeek);
                 cmd.Parameters.AddWithValue("@TemperatureMin", cityVO.TemperatureMin);
                 cmd.Parameters.AddWithValue("@TemperatureMax", cityVO.TemperatureMax);
+                cmd.Parameters.AddWithValue("@Weather", JsonConvert.SerializeObject(cityVO.Weather));
                 // выполнить с возвратом данных 
                 //Object o = cmd.ExecuteScalar();
                 //Console.WriteLine(cmd.Parameters["@IdCity"].Value);
@@ -139,7 +141,7 @@ namespace Program
         {
             string query = _query;
 
-            List<string>[] list = new List<string>[7];
+            List<string>[] list = new List<string>[8];
             list[0] = new List<string>();
             list[1] = new List<string>();
             list[2] = new List<string>();
@@ -147,6 +149,7 @@ namespace Program
             list[4] = new List<string>();
             list[5] = new List<string>();
             list[6] = new List<string>();
+            list[7] = new List<string>();
 
             if (this.OpenConnection() == true)
             {
@@ -163,11 +166,7 @@ namespace Program
                             list[4].Add(dataReader["DayWeek"] + "");
                             list[5].Add(dataReader["TemperatureMin"] + "");
                             list[6].Add(dataReader["TemperatureMax"] + "");
-
-                            /*list[0].Add(dataReader["Code"] + "");
-                            list[1].Add(dataReader["Name"] + "");
-                            list[2].Add(dataReader["Continent"] + "");
-                            list[3].Add(dataReader["Region"] + "");*/
+                            list[7].Add(dataReader["Weather"] + "");
                         }
 
                         dataReader.Close();

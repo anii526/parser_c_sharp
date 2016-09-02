@@ -1,10 +1,4 @@
-﻿using System;
-using System.Collections.Generic;
-using System.Linq;
-using System.Text;
-using System.Threading.Tasks;
-
-namespace Program.vo
+﻿namespace Program.vo
 {
     class CityVO : IVO
     {
@@ -96,7 +90,7 @@ namespace Program.vo
             }
         }
 
-        internal WeatherVO[] Weather
+        public WeatherVO[] Weather
         {
             get
             {
