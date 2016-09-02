@@ -1,6 +1,7 @@
-using System;
+п»їusing System;
 using System.Collections.Generic;
 using MySql.Data.MySqlClient;
+using Program.vo;
 
 namespace Program
 {
@@ -20,12 +21,16 @@ namespace Program
         private void Initialize()
         {
             server = "localhost";
-            //database = "gismeteo";
-            database = "world";
+            database = "gismeteo";
+            //database = "world";
             uid = "root";
             password = "root";
             string connectionString;
-            connectionString = "SERVER=" + server + ";" + "DATABASE=" + database + ";" + "UID=" + uid + ";" + "PASSWORD=" + password + ";";
+            connectionString = 
+                "SERVER=" + server + ";" + 
+                "DATABASE=" + database + ";" +
+                "UID=" + uid + ";" + 
+                "PASSWORD=" + password + ";";
 
             connection = new MySqlConnection(connectionString);
         }
@@ -43,11 +48,11 @@ namespace Program
                 switch (ex.Number)
                 {
                     case 0:
-                        Console.WriteLine("Невозможно соединиться с сервером.");
+                        Console.WriteLine("РќРµРІРѕР·РјРѕР¶РЅРѕ СЃРѕРµРґРёРЅРёС‚СЊСЃСЏ СЃ СЃРµСЂРІРµСЂРѕРј.");
                         break;
 
                     case 1045:
-                        Console.WriteLine("Неверное имя пользователя / пароль");
+                        Console.WriteLine("РќРµРІРµСЂРЅРѕРµ РёРјСЏ РїРѕР»СЊР·РѕРІР°С‚РµР»СЏ / РїР°СЂРѕР»СЊ");
                         break;
                 }
                 return false;
@@ -68,28 +73,39 @@ namespace Program
             }
         }
 
-        // вставка данных
-        public void Insert()
+        // РІСЃС‚Р°РІРєР° РґР°РЅРЅС‹С…
+        public void Insert(CityVO cityVO)
         {
-            string query = "INSERT INTO tableinfo (name, age) VALUES('John Smith', '33')";
+            //Console.WriteLine("INSERT INTO cities (IdCity, NameCity, ImgSrcWeather, Day, DayWeek, TemperatureMin, TemperatureMax  ) VALUES( " + cityVO.IndexCity + "," + cityVO.NameCity + "," + cityVO.ImgSrcWeather + "," + cityVO.Day + "," + cityVO.DayWeek + "," + cityVO.TemperatureMin + "," + cityVO.TemperatureMax + ")");
+
+            string query = "INSERT INTO cities (IdCity, NameCity, ImgSrcWeather, Day, DayWeek, TemperatureMin, TemperatureMax  ) VALUES( @IndexCity,@NameCity,@ImgSrcWeather,@Day,@DayWeek,@TemperatureMin,@TemperatureMax)";
 
             if (this.OpenConnection() == true)
             {
                 MySqlCommand cmd = new MySqlCommand(query, connection);
+                cmd.Parameters.AddWithValue("@IndexCity", cityVO.IndexCity);
+                cmd.Parameters.AddWithValue("@NameCity", cityVO.NameCity);
+                cmd.Parameters.AddWithValue("@ImgSrcWeather", cityVO.ImgSrcWeather);
+                cmd.Parameters.AddWithValue("@Day", cityVO.Day);
+                cmd.Parameters.AddWithValue("@DayWeek", cityVO.DayWeek);
+                cmd.Parameters.AddWithValue("@TemperatureMin", cityVO.TemperatureMin);
+                cmd.Parameters.AddWithValue("@TemperatureMax", cityVO.TemperatureMax);
+                // РІС‹РїРѕР»РЅРёС‚СЊ СЃ РІРѕР·РІСЂР°С‚РѕРј РґР°РЅРЅС‹С… 
+                //Object o = cmd.ExecuteScalar();
+                //Console.WriteLine(cmd.Parameters["@IdCity"].Value);
 
-                // выполнить с возвратом данных 
-                //cmd.ExecuteScalar()
-
-                // не возвращать данные 
+                // РЅРµ РІРѕР·РІСЂР°С‰Р°С‚СЊ РґР°РЅРЅС‹Рµ 
                 cmd.ExecuteNonQuery();
 
                 this.CloseConnection();
             }
         }
 
-        //обновление данных
+        //РѕР±РЅРѕРІР»РµРЅРёРµ РґР°РЅРЅС‹С…
         public void Update()
         {
+            
+
             string query = "UPDATE tableinfo SET name='Joe', age='22' WHERE name='John Smith'";
 
             if (this.OpenConnection() == true)
@@ -108,17 +124,17 @@ namespace Program
                 this.CloseConnection();*/
                 MySqlCommand cmd = new MySqlCommand(query, connection);
 
-                // не возвращать данные 
+                // РЅРµ РІРѕР·РІСЂР°С‰Р°С‚СЊ РґР°РЅРЅС‹Рµ 
                 cmd.ExecuteNonQuery();
 
-                // выполнить с возвратом данных 
+                // РІС‹РїРѕР»РЅРёС‚СЊ СЃ РІРѕР·РІСЂР°С‚РѕРј РґР°РЅРЅС‹С… 
                 //cmd.ExecuteScalar()
 
                 this.CloseConnection();
             }
         }
 
-        //выборка данных
+        //РІС‹Р±РѕСЂРєР° РґР°РЅРЅС‹С…
         public List<string>[] Select(string _query)
         {
             string query = _query;
@@ -140,18 +156,18 @@ namespace Program
                     {
                         while (dataReader.Read())
                         {
-                            /*list[0].Add(dataReader["IdCity"] + "");
+                            list[0].Add(dataReader["IdCity"] + "");
                             list[1].Add(dataReader["NameCity"] + "");
                             list[2].Add(dataReader["ImgSrcWeather"] + "");
                             list[3].Add(dataReader["Day"] + "");
                             list[4].Add(dataReader["DayWeek"] + "");
                             list[5].Add(dataReader["TemperatureMin"] + "");
-                            list[6].Add(dataReader["TemperatureMax"] + "");*/
+                            list[6].Add(dataReader["TemperatureMax"] + "");
 
-                            list[0].Add(dataReader["Code"] + "");
+                            /*list[0].Add(dataReader["Code"] + "");
                             list[1].Add(dataReader["Name"] + "");
                             list[2].Add(dataReader["Continent"] + "");
-                            list[3].Add(dataReader["Region"] + "");
+                            list[3].Add(dataReader["Region"] + "");*/
                         }
 
                         dataReader.Close();

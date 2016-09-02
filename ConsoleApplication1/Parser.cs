@@ -11,7 +11,7 @@ namespace Program
 {
     class Parser
     {
-        private CityVO[] arrAllCitiesInfo;
+        public CityVO[] arrAllCitiesInfo;
 
         public void Start()
         {
@@ -62,10 +62,6 @@ namespace Program
             htmlInfoOfCities = null;
             parser = null;
 
-
-
-
-            Console.ReadKey();
         }
 
         private string getRequest(string url)
