@@ -79,77 +79,72 @@ namespace Program
         {
             //Console.WriteLine("INSERT INTO cities (IdCity, NameCity, ImgSrcWeather, Day, DayWeek, TemperatureMin, TemperatureMax  ) VALUES( " + cityVO.IndexCity + "," + cityVO.NameCity + "," + cityVO.ImgSrcWeather + "," + cityVO.Day + "," + cityVO.DayWeek + "," + cityVO.TemperatureMin + "," + cityVO.TemperatureMax + ")");
 
-            string query = "INSERT INTO cities (IdCity, NameCity, ImgSrcWeather, Day, DayWeek, TemperatureMin, TemperatureMax, Weather  ) VALUES( @IndexCity,@NameCity,@ImgSrcWeather,@Day,@DayWeek,@TemperatureMin,@TemperatureMax,@Weather)";
+            string query = "INSERT INTO cities (IdCity, NameCity, ImgSrcWeather, Day, DayWeek, TemperatureMin, TemperatureMax, Weather  ) VALUES( @IdCity,@NameCity,@ImgSrcWeather,@Day,@DayWeek,@TemperatureMin,@TemperatureMax,@Weather)";
 
             if (this.OpenConnection() == true)
             {
-                MySqlCommand cmd = new MySqlCommand(query, connection);
-                cmd.Parameters.AddWithValue("@IndexCity", cityVO.IndexCity);
-                cmd.Parameters.AddWithValue("@NameCity", cityVO.NameCity);
-                cmd.Parameters.AddWithValue("@ImgSrcWeather", cityVO.ImgSrcWeather);
-                cmd.Parameters.AddWithValue("@Day", cityVO.Day);
-                cmd.Parameters.AddWithValue("@DayWeek", cityVO.DayWeek);
-                cmd.Parameters.AddWithValue("@TemperatureMin", cityVO.TemperatureMin);
-                cmd.Parameters.AddWithValue("@TemperatureMax", cityVO.TemperatureMax);
-                cmd.Parameters.AddWithValue("@Weather", JsonConvert.SerializeObject(cityVO.Weather));
-                // выполнить с возвратом данных 
-                //Object o = cmd.ExecuteScalar();
-                //Console.WriteLine(cmd.Parameters["@IdCity"].Value);
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@IdCity", cityVO.IndexCity);
+                    cmd.Parameters.AddWithValue("@NameCity", cityVO.NameCity);
+                    cmd.Parameters.AddWithValue("@ImgSrcWeather", cityVO.ImgSrcWeather);
+                    cmd.Parameters.AddWithValue("@Day", cityVO.Day);
+                    cmd.Parameters.AddWithValue("@DayWeek", cityVO.DayWeek);
+                    cmd.Parameters.AddWithValue("@TemperatureMin", cityVO.TemperatureMin);
+                    cmd.Parameters.AddWithValue("@TemperatureMax", cityVO.TemperatureMax);
+                    cmd.Parameters.AddWithValue("@Weather", JsonConvert.SerializeObject(cityVO.Weather));
+                    // выполнить с возвратом данных 
+                    //Object o = cmd.ExecuteScalar();
+                    //Console.WriteLine(cmd.Parameters["@IdCity"].Value);
 
-                // не возвращать данные 
-                cmd.ExecuteNonQuery();
-
+                    // не возвращать данные 
+                    cmd.ExecuteNonQuery();
+                }
                 this.CloseConnection();
             }
         }
 
         //обновление данных
-        public void Update()
+        public void Update(CityVO cityVO)
         {
-            
-
-            string query = "UPDATE tableinfo SET name='Joe', age='22' WHERE name='John Smith'";
+            string query = "UPDATE cities SET IdCity = @IdCity, NameCity = @NameCity, ImgSrcWeather = @ImgSrcWeather, Day = @Day, DayWeek = @DayWeek, TemperatureMin = @TemperatureMin, TemperatureMax = @TemperatureMax, Weather = @Weather WHERE IdCity= @IdCity";
 
             if (this.OpenConnection() == true)
             {
-                /*//create mysql command
-                MySqlCommand cmd = new MySqlCommand();
-                //Assign the query using CommandText
-                cmd.CommandText = query;
-                //Assign the connection using Connection
-                cmd.Connection = connection;
+                using (MySqlCommand cmd = new MySqlCommand(query, connection))
+                {
+                    cmd.Parameters.AddWithValue("@IdCity", cityVO.IndexCity);
+                    cmd.Parameters.AddWithValue("@NameCity", cityVO.NameCity);
+                    cmd.Parameters.AddWithValue("@ImgSrcWeather", cityVO.ImgSrcWeather);
+                    cmd.Parameters.AddWithValue("@Day", cityVO.Day);
+                    cmd.Parameters.AddWithValue("@DayWeek", cityVO.DayWeek);
+                    cmd.Parameters.AddWithValue("@TemperatureMin", cityVO.TemperatureMin);
+                    cmd.Parameters.AddWithValue("@TemperatureMax", cityVO.TemperatureMax);
+                    cmd.Parameters.AddWithValue("@Weather", JsonConvert.SerializeObject(cityVO.Weather));
+                    // выполнить с возвратом данных 
+                    //Object o = cmd.ExecuteScalar();
+                    //Console.WriteLine(cmd.Parameters["@IdCity"].Value);
 
-                //Execute query
-                cmd.ExecuteNonQuery();
-
-                //close connection
-                this.CloseConnection();*/
-                MySqlCommand cmd = new MySqlCommand(query, connection);
-
-                // не возвращать данные 
-                cmd.ExecuteNonQuery();
-
-                // выполнить с возвратом данных 
-                //cmd.ExecuteScalar()
+                    // не возвращать данные 
+                    cmd.ExecuteNonQuery();
+                }
 
                 this.CloseConnection();
             }
         }
 
         //выборка данных
-        public List<string>[] Select(string _query)
+        public List<string>[] Select(string _query, string[] _nameParams)
         {
             string query = _query;
+            string[] nameParams = _nameParams;
 
-            List<string>[] list = new List<string>[8];
-            list[0] = new List<string>();
-            list[1] = new List<string>();
-            list[2] = new List<string>();
-            list[3] = new List<string>();
-            list[4] = new List<string>();
-            list[5] = new List<string>();
-            list[6] = new List<string>();
-            list[7] = new List<string>();
+            List<string>[] list = new List<string>[_nameParams.Length];
+
+            for (int i = 0; i < _nameParams.Length; i++)
+            {
+                list[i] = new List<string>();
+            }
 
             if (this.OpenConnection() == true)
             {
@@ -159,14 +154,10 @@ namespace Program
                     {
                         while (dataReader.Read())
                         {
-                            list[0].Add(dataReader["IdCity"] + "");
-                            list[1].Add(dataReader["NameCity"] + "");
-                            list[2].Add(dataReader["ImgSrcWeather"] + "");
-                            list[3].Add(dataReader["Day"] + "");
-                            list[4].Add(dataReader["DayWeek"] + "");
-                            list[5].Add(dataReader["TemperatureMin"] + "");
-                            list[6].Add(dataReader["TemperatureMax"] + "");
-                            list[7].Add(dataReader["Weather"] + "");
+                            for (int i = 0; i < _nameParams.Length; i++)
+                            {
+                                list[i].Add(dataReader[_nameParams[i]] + "");
+                            }
                         }
 
                         dataReader.Close();

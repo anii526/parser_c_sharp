@@ -20,7 +20,7 @@ namespace Program
 
             //debug
             string response = "";
-            //response = getRequest("https://www.gismeteo.ru/");
+            response = getRequest("https://www.gismeteo.ru/");
 
 
             Console.WriteLine("Загрузка страницы закончилась");
@@ -28,9 +28,8 @@ namespace Program
 
             //debug
             //информация по брянску
-            string[] idsCities = new string[] { "4258" };
-            //debug
-            //string[] idsCities = getCitiesIDs(response);
+            //string[] idsCities = new string[] { "4258" };
+            string[] idsCities = getCitiesIDs(response);
 
             response = string.Empty;
 
@@ -57,6 +56,17 @@ namespace Program
             {
                 // мб выглядит не ок, но я не хочу создавать много разных экземпляров HtmlParser лучше я буду передавать 1
                 arrAllCitiesInfo[j] = getCityVO(parser, htmlInfoOfCities[j], idsCities[j]);
+            }
+
+            for (int i = 0; i < htmlInfoOfCities.Length; i++)
+            {
+                htmlInfoOfCities[i] = null;
+            }
+
+            for (int i = 0; i < idsCities.Length; i++)
+            {
+                // мб выглядит не ок, но я не хочу создавать много разных экземпляров HtmlParser лучше я буду передавать 1
+                idsCities[i] = null;
             }
 
             htmlInfoOfCities = null;
@@ -145,7 +155,14 @@ namespace Program
             }
             cityVO.Weather = weather.ToArray();
 
+            for (int i = 0; i < 4; i++)
+            {
+                weather[i] = null;
+            }
+            weather = null;
+
             doc.Dispose();
+            doc = null;
 
             return cityVO;
         }
