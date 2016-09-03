@@ -9,6 +9,7 @@ namespace Program
     {
         private DBConnect dbConnect;
         private Parser parser;
+        private int interval;
 
         public App()
         {
@@ -16,17 +17,23 @@ namespace Program
 
             dbConnect = new DBConnect();
 
-            //4 раза в сутки будет парситься, т.е. период 21600000
+            //4 раза в сутки будет парситься, т.е. период 21600000 миллисекунд
+            //2 минуты 120000 миллисекунд
+            interval = 21600000;
 
-            Timer timer = new Timer(TimerCallback, null, 0, 120000);
+            Timer timer = new Timer(TimerCallback, null, 0, interval);
 
             Console.ReadLine();
         }
 
         private void TimerCallback(Object o)
         {
+            Console.WriteLine("Парсер начал свою работу " + DateTime.Now);
+            Console.WriteLine("Потребуется немного времени для его работы");
             Init();
-            //Console.WriteLine("тик");
+            Console.WriteLine("Парсинг свою работу закончил");
+            Console.WriteLine("Следующий запуск ожидается: " + DateTime.Now.AddMilliseconds(interval));
+            Console.WriteLine();
         }
 
         private void Init()
@@ -54,12 +61,12 @@ namespace Program
 
                 if (coincides == true)
                 {
-                    Console.WriteLine("ID записи совпадает");
+                    //Console.WriteLine("ID записи совпадает");
                     dbConnect.Update(cityVO);
                 }
                 else
                 {
-                    Console.WriteLine("ID записи не совпадает");
+                    //Console.WriteLine("ID записи не совпадает");
                     dbConnect.Insert(cityVO);
                 }
                 coincides = false;
@@ -67,8 +74,7 @@ namespace Program
 
             cityVO = null;
 
-            Console.WriteLine("Запись окончена");
-            Console.WriteLine("");
+            //Console.WriteLine("Запись окончена");
         }
     }
 }

@@ -16,15 +16,15 @@ namespace Program
         public void Start()
         {
             //работа с сетью
-            Console.WriteLine("Началась загрузка страницы https://www.gismeteo.ru/");
+            //Console.WriteLine("Началась загрузка страницы https://www.gismeteo.ru/");
 
             //debug
             string response = "";
             response = getRequest("https://www.gismeteo.ru/");
 
 
-            Console.WriteLine("Загрузка страницы закончилась");
-            Console.WriteLine("Начинается парсинг главной страницы, цель => получить id городов");
+            //Console.WriteLine("Загрузка страницы закончилась");
+            //Console.WriteLine("Начинается парсинг главной страницы, цель => получить id городов");
 
             //debug
             //информация по брянску
@@ -34,8 +34,8 @@ namespace Program
             response = string.Empty;
 
 
-            Console.WriteLine("ID городов получены всего их : " + idsCities.Length);
-            Console.WriteLine("Начинаю загружать информацию о каждом из этих городов по списку");
+            //Console.WriteLine("ID городов получены всего их : " + idsCities.Length);
+            //Console.WriteLine("Начинаю загружать информацию о каждом из этих городов по списку");
 
 
             string[] htmlInfoOfCities = new string[idsCities.Length];
@@ -43,10 +43,10 @@ namespace Program
             for (int i = 0; i < htmlInfoOfCities.Length; i++)
             {
                 htmlInfoOfCities[i] = getRequest("https://www.gismeteo.ru/city/daily/" + idsCities[i]);
-                Console.WriteLine("Загрузилась информация о " + (i + 1) + " городе.");
+                //Console.WriteLine("Загрузилась информация о " + (i + 1) + " городе.");
             }
 
-            Console.WriteLine("Информация о каждом из этих городов по списку успешно загружена");
+            //Console.WriteLine("Информация о каждом из этих городов по списку успешно загружена");
 
             arrAllCitiesInfo = new CityVO[htmlInfoOfCities.Length];
 
