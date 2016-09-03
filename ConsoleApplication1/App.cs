@@ -1,6 +1,7 @@
 ﻿using Program.vo;
 using System;
 using System.Collections.Generic;
+using System.Threading;
 
 namespace Program
 {
@@ -11,15 +12,26 @@ namespace Program
 
         public App()
         {
+            parser = new Parser();
+
+            dbConnect = new DBConnect();
+
+            //4 раза в сутки будет парситься, т.е. период 21600000
+
+            Timer timer = new Timer(TimerCallback, null, 0, 120000);
+
+            Console.ReadLine();
+        }
+
+        private void TimerCallback(Object o)
+        {
             Init();
+            //Console.WriteLine("тик");
         }
 
         private void Init()
-        {
-            parser = new Parser();
+        {            
             parser.Start();
-
-            dbConnect = new DBConnect();
 
             List<string>[] list;
             // в Select надо передавать массив с именами параметров, которые необходимо получить с бд.
@@ -56,8 +68,7 @@ namespace Program
             cityVO = null;
 
             Console.WriteLine("Запись окончена");
-            //Console.ReadKey();
-
+            Console.WriteLine("");
         }
     }
 }
